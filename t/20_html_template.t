@@ -19,7 +19,7 @@ BEGIN {
     $is_ta = $module eq 'Template::Alloy';
 };
 use strict;
-use Test::More tests => ($is_ta) ? 250 : ($is_ht) ? 75 : 82;
+use Test::More tests => ($is_ta) ? 254 : ($is_ht) ? 75 : 82;
 use constant test_taint => 0 && eval { require Taint::Runtime };
 
 use_ok($module);
@@ -187,6 +187,9 @@ process_ok("<TMPL_INCLUDE bar.ht>" => "(hi)", {bar => 'hi'});
 ###----------------------------------------------------------------###
 print "### EXPR ############################################ $is_compile_perl\n";
 
+Template::Alloy->register_function( 'tmpl_uc', sub { return uc(shift); } );
+Template::Alloy->register_function( 'tmpl_add_one', sub { return 1 + shift; } );
+
 process_ok("<TMPL_VAR EXPR=\"sprintf('%d', foo)\">" => "777", {foo => "777"}) if ! $is_ht;
 process_ok("<TMPL_VAR EXPR=\"sprintf('%d', foo)\">" => "777", {foo => "777"}) if ! $is_ht;
 process_ok("<TMPL_VAR EXPR='sprintf(\"%d\", foo)'>" => "777", {foo => "777"}) if ! $is_ht && ! $is_hte; # odd that HTE can't parse this
@@ -200,6 +203,9 @@ process_ok("<!--TMPL_VAR EXPR=\"foo\"-->" => "FOO", {foo => "FOO"}) if ! $is_ht 
 
 process_ok("<TMPL_VAR EXPR=foo>" => '&amp;', {foo => '&', tt_config => [AUTO_FILTER => 'html']}) if $is_ta;
 process_ok("<TMPL_VAR EXPR=foo|none>" => '&', {foo => '&', tt_config => [AUTO_FILTER => 'html']}) if $is_ta;
+
+process_ok("<TMPL_VAR EXPR=\"tmpl_uc('abc')\">" => "ABC");
+process_ok("<TMPL_VAR EXPR=\"tmpl_add_one(1)\">" => "2");
 
 ###----------------------------------------------------------------###
 print "### LOOP ############################################ $is_compile_perl\n";
