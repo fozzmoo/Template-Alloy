@@ -434,7 +434,7 @@ PUBLIC METHODS
         same as calling define_vmethod with "text" as the first argument.
 
             Template::Alloy->register_function(
-                reverse => sub { my $item = shift; return scalar reverse $item },
+                'reverse', sub { my $item = shift; return scalar reverse $item },
             );
 
     "define_directive"
