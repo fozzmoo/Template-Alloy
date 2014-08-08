@@ -18,7 +18,7 @@ sub new { die "This class is a role for use by packages such as Template::Alloy"
 ### support for few HTML::Template and HTML::Template::Expr calling syntax
 
 sub register_function {
-    my ($name, $sub) = @_;
+    my ($class, $name, $sub) = @_;
     $Template::Alloy::SCALAR_OPS->{$name} = $sub;
 }
 
